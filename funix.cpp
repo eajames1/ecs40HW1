@@ -6,9 +6,14 @@
 
 int main(int argc, const char * argv[])
 {	
-	Funix f;
-	run(&f);
+	Funix *f = (Funix*)malloc(sizeof(Funix));
+	run(f);
     return 0;
+}
+
+void cd(Funix *funix, int argCount, const char *arguments[])
+{
+	// Calls cd() with currentDirectory as one of its parameters
 }
 
 int eXit(Funix *funix, int argCount, const char *arguments[])
@@ -47,19 +52,40 @@ void init(Funix *funix)
 		d.perm = &p;
 		funix->currentDirectory = &d;
 		Directory *current = funix->currentDirectory;
-		printf("b: %p \n", &current);
+		printf("b: %p \n", funix->currentDirectory);//&current);
 		// printf("%s\n", funix->currentDirectory->name);
 		// printf("%i\n", funix->currentDirectory->modified);
 		// printf("\n The address of y is %p ", funix);
 		funix->umask++;
 }
 
+void ls(Funix *funix, int argCount, const char *arguments[])
+{
+	// calls ls() with currentDirectory as one of its parameters
+}
+
+void mkdir(Funix *funix, int argCount, const char *arguments[])
+{
+	// calls mkdir() with currentDirectory as one of its parameters
+}
+
+int processCommand(Funix *funix, char *command)
+{
+	// returns 0 on proper exit
+}
+
 void writePrompt(Funix *funix)
 {
-	Directory *current = funix->currentDirectory;
-	printf("a: %p ", &current);
+	//Directory *current = funix->currentDirectory;
+	//printf("a: %p ", &current);
+	printf("a: %p ", funix->currentDirectory);
 	printf("# ");
 	// printf("\n The address of z is %p ", funix);
+}
+
+void umask(Funix *funix, int argCount, const char *arguments[])
+{
+	// Checks "umask" command and executes it if it is proper
 }
 
 void run(Funix *funix)
