@@ -14,6 +14,7 @@ int main(int argc, const char * argv[])
 void cd(Funix *funix, int argCount, const char *arguments[])
 {
 	// Calls cd() with currentDirectory as one of its parameters
+	//cd(funix, count, funix->currentDirectory)
 }
 
 int eXit(Funix *funix, int argCount, const char *arguments[])
@@ -62,16 +63,22 @@ void init(Funix *funix)
 void ls(Funix *funix, int argCount, const char *arguments[])
 {
 	// calls ls() with currentDirectory as one of its parameters
+	// ls(funix, count, funix->currentDirectory);
 }
 
 void mkdir(Funix *funix, int argCount, const char *arguments[])
 {
 	// calls mkdir() with currentDirectory as one of its parameters
+	// mkdir(funix, count, funix->currentDirectory)
 }
 
 int processCommand(Funix *funix, char *command)
 {
 	// returns 0 on proper exit
+	// if( eXit(funix, command))
+	// {
+	// 	return(0);
+	// }
 }
 
 void writePrompt(Funix *funix)
