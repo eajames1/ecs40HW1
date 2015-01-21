@@ -3,106 +3,125 @@
 #include <stdlib.h>
 #include <time.h>
 #include "funix.h"
+#include "permissions.h"
+#include "directory.h"
 
 int main(int argc, const char * argv[])
 {	
 	Funix *f = (Funix*)malloc(sizeof(Funix));
 	run(f);
-    return 0;
+	return 0;
 }
 
 void cd(Funix *funix, int argCount, const char *arguments[])
 {
-	// Calls cd() with currentDirectory as one of its parameters
-	//cd(funix, count, funix->currentDirectory)
+	/*  Calls cd() with currentDirectory as one of its parameters
+	*  Unsure of what to do with count/what count is
+	*  cd(funix, count, funix->currentDirectory) */
+	return;
 }
 
 int eXit(Funix *funix, int argCount, const char *arguments[])
 {	
+	/* checks "exit" command and returns 0 on proper exit */
 	exit(0);
 	return 0;
 }
 
-void getCommand(Funix *funix, char *command)
-{
-	fgets(command, sizeof(command)*COMMAND_LENGTH, stdin);
-	
-	// Strip the command of the '\n' character
-	size_t ln = strlen(command) - 1;
-	if (command[ln] == '\n')
-		command[ln] = '\0';
-
-	// If "exit" command is entered
-	if(strcmp(command, "exit") == 0){
-		const char *a[NUM_COMMANDS];
-		eXit(funix, 0, a);
-	}
-}
-
-
 void init(Funix *funix)
 {
-		Directory d;
-		char name[] = "/";
-		d.name = name;
-		d.modified = 1;
-		Permissions p;
-		p.r = 1;
-		p.w = 1;
-		p.x = 1;
-		d.perm = &p;
-		funix->currentDirectory = &d;
-		Directory *current = funix->currentDirectory;
-		printf("b: %p \n", funix->currentDirectory);//&current);
-		// printf("%s\n", funix->currentDirectory->name);
-		// printf("%i\n", funix->currentDirectory->modified);
-		// printf("\n The address of y is %p ", funix);
-		funix->umask++;
+	funix->currentDirectory = createDirectory( "/", funix->umask, 0 );
+	funix->time++;
+	return;
 }
 
 void ls(Funix *funix, int argCount, const char *arguments[])
 {
-	// calls ls() with currentDirectory as one of its parameters
-	// ls(funix, count, funix->currentDirectory);
+	/* calls ls() with currentDirectory as one of its parameters
+	* ls(funix, count, funix->currentDirectory); */
+	return;
 }
 
 void mkdir(Funix *funix, int argCount, const char *arguments[])
 {
-	// calls mkdir() with currentDirectory as one of its parameters
-	// mkdir(funix, count, funix->currentDirectory)
+	/* calls mkdir() with currentDirectory as one of its parameters
+	* should make a new directory? Not exactly sure what that entails
+	* mkdir(funix, count, funix->currentDirectory) */
+	return;
 }
 
 int processCommand(Funix *funix, char *command)
 {
-	// returns 0 on proper exit
-	// if( eXit(funix, command))
-	// {
-	// 	return(0);
-	// }
+	/* returns 0 on proper exit
+	* If "exit" command is entered */
+	const char *arr[NUM_COMMANDS];
+	char *check;
+	int i, j;
+	for( i = 0, check = command; ; i++, check = NULL)
+	{
+		char *temp = strtok( check, " " );
+		if( temp == NULL)
+		{
+            		break;
+		}
+		arr[i] = temp;
+	}
+	if(strcmp(arr[0], "exit") == 0)
+	{
+	/* "exit" will be the first element; pass in arr+1 so that we don't pass in "exit"
+	*  i-1 so as to not count "exit" in the number of args */
+		eXit(funix, i-1, arr+1);
+	}
+	if(strcmp(arr[0], "cd") == 0)
+	{
+		cd(funix, i-1, arr+1);
+	}
+	if(strcmp(arr[0], "ls") == 0)
+	{
+		ls(funix, i-1, arr+1);
+	}
+	if(strcmp(arr[0], "mkdir") == 0)
+	{
+		mkdir(funix, i-1, arr+1);
+	}
+	if(strcmp(arr[0], "umask") == 0)
+	{
+		umask(funix, i-1, arr+1);
+	}
+	return 0;
 }
 
 void writePrompt(Funix *funix)
 {
-	//Directory *current = funix->currentDirectory;
-	//printf("a: %p ", &current);
-	printf("a: %p ", funix->currentDirectory);
-	printf("# ");
-	// printf("\n The address of z is %p ", funix);
+	/* shows path and '#'
+	* Directory *current = funix->currentDirectory;
+	* printf("a: %p ", &current);
+	* printf("a: %p ", funix->currentDirectory); */
+	showPath( funix->currentDirectory );
+	printf(" # ");
+	/* printf("\n The address of z is %p ", funix); */
 }
 
-void umask(Funix *funix, int argCount, const char *arguments[])
+void getCommand(Funix *funix, char *command)
 {
-	// Checks "umask" command and executes it if it is proper
+	/* writes prompt and reads command */
+	writePrompt(funix);
+	fgets(command, COMMAND_LENGTH, stdin);
+	
+	/* Strip the command of the '\n' character */
+	size_t ln = strlen(command) - 1;
+	if (command[ln] == '\n')
+		command[ln] = '\0';
 }
 
 void run(Funix *funix)
 {
-	char *command;
-
+	/* reads and processes commands in a loop until proper exit */
+	char command[COMMAND_LENGTH];
+	init(funix);
 	while(1){
-		init(funix);
-		writePrompt(funix);
 		getCommand(funix, command);
-		// printf("\n The address of x is %p ", funix);
+		// processCommand(,)
 	}
+	return;
 }
